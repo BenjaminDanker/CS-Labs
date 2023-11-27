@@ -1,66 +1,41 @@
 #include <iostream>
-#include <string>
-#include <memory>
+//#include "Array.h"
 
-class Shape {
-public:
-	void setBackground(std::string background) {
-		this->background = background;
-	}
-	std::string getBackground() {
-		return background;
-	}
-protected:
-	std::string background;
-};
-
-class Rectangle: public Shape{
-public:
-	Rectangle() {
-		width = 0;
-		height = 0;
-	}
-	Rectangle(int width, int height) {
-		setBackground("Background is Rectangle");
-		this->width = width;
-		this->height = height;
-	}
-	int getArea() const {
-		return width * height;
-	}
-	void draw() const {
-		std::cout << width * height << std::endl;
-	}
+template <typename T> class Array {
 private:
-	int width;
-	int height;
-};
-
-class Circle: public Shape {
+	int size;
+	T* data;
 public:
-	Circle() {
-		radius = 0;
-	}
-	Circle(float radius) {
-		background = "Background is Circle";
-		this->radius = radius;
-	}
-	float getArea() const {
-		return 3.14 * radius * radius;
-	}
-	float getPerimeter() const {
-		return 2 * 3.14 * radius;
-	}
-private:
-	float radius;
+	explicit Array(T arr[], int size);
+	~Array();
+	Array(const Array& other);
 };
 
-int main()
-{
-	Rectangle rectangle(5, 10);
-	rectangle.draw();
+template <typename T> Array<T>::Array(T arr[], int size) {
+	data = new T[size];
+	this->size = size;
+	for (int i = 0; i < size; i++) {
+		data[i] = arr[i];
+	}
+	//data = std::make_unique<int[]>(size);
+}
 
-	Circle circle(2);
-	std::cout << circle.getArea() << std::endl;
+template <typename T> Array<T>::~Array() {
+	delete[] data;
+	data = nullptr;
+}
 
+template <typename T> Array<T>::Array(const Array& other) {
+	size = other.size;
+	data = new int[size];
+	//data = std::make_unique<int[]>(size);
+	for (int i = 0; i < size; i++) {
+		data[i] = other.data[i];
+	}
+}
+
+int main() {
+	int arr[3] = { 1, 2, 3 };
+	Array<int> numbers(arr, 3);
+	Array<int> newNumbers{ numbers };
 }
